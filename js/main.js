@@ -1,12 +1,17 @@
-var Song = Backbone.Model.extend({
-  validate: function(attrs){
-    if(!attrs.title)
-      return "Title is required"
+var Animal = Backbone.Model.extend({
+  walk: function(){
+    console.log("Animal walking...")
   }
 });
 
-var song = new Song();
+var Dog = Animal.extend({
+  walk: function() {
+    Animal.prototype.walk.apply(this);
 
-song.isValid();
+    console.log("Dog walking...");
+  }
+});
 
-var lastError = song.validationError;
+var dog = new Dog();
+
+dog.walk();
