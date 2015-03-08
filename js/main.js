@@ -1,20 +1,19 @@
-var Vehicle = Backbone.Model.extend({
-  validate: function(attrs){
-    if (!attrs.registrationNumber)
-      return "Registration is required.";
-  },
-  start: function(){
-    console.log("Vehicle started.");
-  }
+var Song = Backbone.Model.extend();
+
+var Songs = Backbone.Collection.extend({
+  model: Song
 });
 
-var Car = Vehicle.extend({
-  start: function(){
-    console.log("Car with registration number "
-        + this.get('registrationNumber') + " started.");
-  }
-});
+var songs = new Songs([
+    new Song({ title: "Song 1"}),
+    new Song({ title: "Song 2"}),
+    new Song({ title: "Song 3"})
+]);
 
-var car = new Car({ registrationNumber: "XLI887", color: "Blue" });
+songs.add(new Song({ title: "Song 4" }));
 
-car.start();
+var firstSong = songs.at(0);
+
+var songWithIdC1 = songs.get("c1");
+
+songs.remove(firstSong);
