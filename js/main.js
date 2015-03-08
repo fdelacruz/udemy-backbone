@@ -1,34 +1,31 @@
-var Song = Backbone.Model.extend();
+var Vehicle = Backbone.Model.extend();
 
-var Songs = Backbone.Collection.extend({
-  model: Song
+var Vehicles = Backbone.Collection.extend({
+  model: Vehicle
 });
 
-var songs = new Songs();
+var vehicles = new Vehicles([
+    new Vehicle({ registrationNumber: "XLI887", colour: "Blue"}),
+    new Vehicle({ registrationNumber: "ZNP123", colour: "Blue"}),
+    new Vehicle({ registrationNumber: "XUV456", colour: "Gray"})
+]);
 
-songs.add(new Song({ title: "Song 1", genre: "Jazz", downloads: 110 }), { at: 0 });
+var blueVehicles = vehicles.where({ colour: "Blue"});
 
-songs.push(new Song({ title: "Song 2", genre: "Jazz", downloads: 90 }));
+console.log("Blue Vehicles:", blueVehicles);
 
-// var lastSong = songs.pop();
+var foundVehicle = vehicles.where({ registrationNumber: "XLI887"});
 
-var jazzSongs = songs.where({ genre: "Jazz"});
+console.log("Car with the registration number XLI887:", foundVehicle);
 
-var firstJazzSong = songs.findWhere({ genre: "Jazz"});
+vehicles.remove(foundVehicle);
 
-console.log("Jazz Songs", jazzSongs);
-
-console.log("First Jazz Song", firstJazzSong);
-
-var filteredSongs = songs.where({ genre: "Jazz", title: "Song 2" });
-console.log("Filtered Songs", filteredSongs);
-
-var topDownloads = songs.filter(function(song){
-  return song.get("downloads") > 100;
+console.log("Vehicles Collection as JSON Objects:");
+vehicles.each(function(vehicle){
+  console.log(vehicle.toJSON());
 });
 
-console.log("Top Downloads", topDownloads);
-
-songs.each(function(song){
-  console.log(song)
+console.log("Vehicles Collection:");
+vehicles.each(function(vehicle){
+  console.log(vehicle);
 });
