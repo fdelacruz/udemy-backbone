@@ -1,26 +1,39 @@
+var Song = Backbone.Model.extend();
+
+var Songs = Backbone.Collection.extend({
+  model: Song
+});
+
 var SongView = Backbone.View.extend({
 
-  tagName: "span",
+  tagName: "li",
 
-  className: "song",
-  
-  id: "1234",
-  
-  attributes: {
-    "data-genre": "Jazz"
-  },
-
-  render: function() {
-    this.$el.html("Hello World");
+  render: function(){
+    this.$el.html(this.model.get("title"));
 
     return this;
   }
 });
 
-// Simple way to render a view
-// var songView = new SongView({ el: "#container"}); 
-// songView.render();
+var SongsView = Backbone.View.extend({
 
-// Popular way..Since render returns "this", we can do chaining
-var songView = new SongView();
-$("#container").html(songView.render().$el);
+  tagName: "ul",
+
+  render: function(){
+    var self = this;
+
+    this.model.each(function(song){
+      var songView = new SongView({ model: song });
+      self.$el.append(songView.render().$el);
+    });
+  }
+});
+
+var songs = new Songs([
+  new Song({ title: "Blue in Green" }),
+  new Song({ title: "So what" }),
+  new Song({ title: "All Blues" })
+]);
+
+var songsView = new SongsView({ el: "#songs", model: songs });
+songsView.render();
