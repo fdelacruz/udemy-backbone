@@ -1,18 +1,51 @@
-var Song = Backbone.Model.extend();
+var Vehicle = Backbone.Model.extend();
 
-var SongView = Backbone.View.extend({
+var Vehicles = Backbone.Collection.extend({
+  model: Vehicle
+});
+
+var VehicleView = Backbone.View.extend({
+  tagName: "li",
+  className: "vehicle",
+
+  attributes: {
+    "data-attribute": "data-color"
+  },
+
+  events: {
+    "click .deleteVehicle": "onClickDelete"
+  },
+
+  onClickDelete: function(){
+    this.remove();
+    this.model.destroy();
+  },
 
   render: function(){
-    var template = _.template($("#songTemplate").html());
-    // var html = template(this.model.toJSON());
-    // this.$el.html(html);
-    this.$el.html(template(this.model.toJSON()));
+    this.$el.html(this.model.get("vehicleMake") + " " + this.model.get("vehicleModel") + ", Registration Number: " + this.model.get("registrationNumber") + " <button class='deleteVehicle'>Delete</button>");
 
     return this;
   }
 });
 
-var song = new Song({ title: "Blue in Green", plays: 1100 });
+var VehiclesView = Backbone.View.extend({
+  tagName: "ul",
 
-var songView = new SongView({ el: "#container", model: song });
-songView.render();
+  render: function(){
+    var self = this;
+
+    this.model.each(function(vehicle){
+      var vehicleView = new VehicleView({ model: vehicle });
+      self.$el.append(vehicleView.render().$el);
+    });
+  }
+});
+
+var vehicles = new Vehicles([
+    new Vehicle({ vehicleMake: "Cadillac", vehicleModel: "ATS", registrationNumber: "XLI887", color: "White" }),
+    new Vehicle({ vehicleMake: "Cadillac", vehicleModel: "CTS", registrationNumber: "ZNP123", color: "White" }),
+    new Vehicle({ vehicleMake: "Cadillac", vehicleModel: "XTS", registrationNumber: "XUV456", color: "White" })
+]);
+
+var vehiclesView = new VehiclesView({ el: "#vehicles", model: vehicles });
+vehiclesView.render();
