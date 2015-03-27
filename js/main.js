@@ -1,112 +1,72 @@
-var Vehicle = Backbone.Model.extend({
-  defaults: {
-    vehicleMake: "Cadillac",
-    vehicleModel: "ATS",
-  }
-});
-
-var Vehicles = Backbone.Collection.extend({
-  model: Vehicle
-});
-
-var VehicleView = Backbone.View.extend({
-  tagName: "li",
-  className: "vehicle",
-
-  attributes: {
-    "data-attribute": "data-color"
-  },
-
-  initialize: function(){
-    this.model.on("destroy", this.remove, this); // 3. Listen for when the model is destroyed..
-  },
-
-  events: {
-    "click .delete": "onClickDelete" // 1. Add click event..
-  },
-
-  onClickDelete: function(){
-    this.model.destroy(); // 2. Call the Backbone.js destroy method on the model..
-  },
-
-  remove: function(){
-    this.$el.remove(); // 4. Call the jQuery remove method on the corresponding LI..
-  },
-
+var ArtistsView = Backbone.View.extend({
   render: function(){
-    this.$el.html(this.model.get("vehicleMake") + " " + this.model.get("vehicleModel") + ", Registration Number: " + this.model.get("registrationNumber") + " <button class='delete'>Delete</button>");
+    this.$el.html("ARTISTS VIEW");
 
     return this;
   }
 });
 
-var NewVehicleView = Backbone.View.extend({
-  className: "input",
-
-  initialize: function(options){
-    this.bus = options.bus;
-  },
-
-  events: {
-    'click input[type="submit"]' : 'onSubmit'
-  },
-
-  onSubmit: function() {
-    var $input = this.$el.find('input[type=text]');
-    var newVehicle = $input.val();
-    $input.val("");
-    this.bus.trigger('onAddVehicle', newVehicle);
-  },
-
-  render: function() {
-    this.$el.html('<input type="text" placeholder="Registration Number"><input type="submit" value="Add">');
-
-    return this;
-  }
-});
-
-var VehiclesView = Backbone.View.extend({
-  tagName: "ul",
-
-  initialize: function(options) {
-    this.model.on("add", this.prependVehicle, this);
-
-    this.bus = options.bus;
-    this.bus.on('onAddVehicle', this.addVehicle, this);
-  },
-
-  addVehicle: function(newregistrationNumber) {
-    var newVehicle = new Vehicle({ registrationNumber: newregistrationNumber });
-    this.model.add(newVehicle);
-  },
-
-  prependVehicle: function(newVehicle) {
-    var newVehicleView = new VehicleView({ model: newVehicle, bus: this.bus });
-    this.$el.prepend(newVehicleView.render().$el);
-  },
-
+var AlbumsView = Backbone.View.extend({
   render: function(){
-    var self = this;
-
-    this.model.each(function(vehicle){
-      var vehicleView = new VehicleView({ model: vehicle });
-      self.$el.append(vehicleView.render().$el);
-    });
+    this.$el.html("ALBUMS VIEW");
 
     return this;
   }
 });
 
-var bus = _.extend({}, Backbone.Events); // Event Aggregator
+var GenresView = Backbone.View.extend({
+  render: function(){
+    this.$el.html("GENRES VIEW");
 
-var vehicles = new Vehicles([
-    new Vehicle({ vehicleMake: "Cadillac", vehicleModel: "ATS", registrationNumber: "XLI887", color: "White" }),
-    new Vehicle({ vehicleMake: "Cadillac", vehicleModel: "CTS", registrationNumber: "ZNP123", color: "White" }),
-    new Vehicle({ vehicleMake: "Cadillac", vehicleModel: "XTS", registrationNumber: "XUV456", color: "White" })
-]);
+    return this;
+  }
+});
 
-var vehiclesView = new VehiclesView({ model: vehicles, bus: bus });
-var newVehicleView = new NewVehicleView({ bus: bus });
+var AppRouter = Backbone.Router.extend({
+  routes: {
+    "albums": "viewAlbums",
+    "albums/:albumId": "viewAlbumById",
+    "artists": "viewArtists",
+    "genres": "viewGenres",
+    "*other": "defaultRoute"
+  },
 
-$('#vehicles').append(vehiclesView.render().$el);
-$('#vehicles').prepend(newVehicleView.render().$el);
+  viewAlbums: function(){
+    var view = new AlbumsView({ el: "#container" });
+    view.render();
+  },
+
+  viewAlbumById: function(albumId){
+
+  },
+
+  viewArtists: function(){
+    var view = new ArtistsView({ el: "#container" });
+    view.render();
+  },
+
+  viewGenres: function(){
+    var view = new GenresView({ el: "#container" });
+    view.render();
+  }, 
+
+  defaultRoute: function(){
+
+  }
+});
+
+var router = new AppRouter();
+Backbone.history.start();
+
+var NavView = Backbone.View.extend({
+  events: {
+    "click": "onClick"
+  },
+
+  onClick: function(e){
+    var $li = $(e.target);
+    router.navigate($li.attr("data-url"), { trigger: true });
+  }
+});
+
+var navView = new NavView({ el: "#nav" });

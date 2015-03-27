@@ -61,7 +61,10 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
-
+#nav ul li { 
+  cursor: pointer;
+  color: blue;
+}
 
 
 
