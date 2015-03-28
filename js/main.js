@@ -1,22 +1,78 @@
-var ArtistsView = Backbone.View.extend({
-  render: function(){
-    this.$el.html("ARTISTS VIEW");
+var Car = Backbone.Model.extend();
+
+var Cars = Backbone.Collection.extend({
+  model: Car
+});
+
+var cars = new Cars([
+    new Car({ carMake: "Cadillac", carModel: "ATS" }),
+    new Car({ carMake: "Buick", carModel: "Regal" }),
+    new Car({ carMake: "Ford", carModel: "Fusion" })
+]);
+
+var CarView = Backbone.View.extend({
+  tagName: "li",
+  className: "car",
+
+  render: function() {
+    this.$el.html(this.model.get("carMake") + " " + this.model.get("carModel"));
 
     return this;
   }
 });
 
-var AlbumsView = Backbone.View.extend({
-  render: function(){
-    this.$el.html("ALBUMS VIEW");
+var CarsView = Backbone.View.extend({
+  tagName: "ul",
+
+  render: function() {
+    var self = this;
+
+    this.model.each(function(car) {
+      var carView = new CarView({ model: car });
+      self.$el.append(carView.render().$el);
+    });
+  }
+});
+
+var Truck = Backbone.Model.extend();
+
+var Trucks = Backbone.Collection.extend({
+  model: Truck
+});
+
+var trucks = new Trucks([
+    new Truck({ truckMake: "Cadillac", truckModel: "Escalade" }),
+    new Truck({ truckMake: "Buick", truckModel: "Enclave" }),
+    new Truck({ truckMake: "Ford", truckModel: "F-150" })
+]);
+
+var TruckView = Backbone.View.extend({
+  tagName: "li",
+  className: "truck",
+
+  render: function() {
+    this.$el.html(this.model.get("truckMake") + " " + this.model.get("truckModel"));
 
     return this;
   }
 });
 
-var GenresView = Backbone.View.extend({
+var TrucksView = Backbone.View.extend({
+  tagName: "ul",
+
+  render: function() {
+    var self = this;
+
+    this.model.each(function(truck) {
+      var truckView = new TruckView({ model: truck });
+      self.$el.append(truckView.render().$el);
+    });
+  }
+});
+
+var HomeView = Backbone.View.extend({
   render: function(){
-    this.$el.html("GENRES VIEW");
+    this.$el.html("");
 
     return this;
   }
@@ -24,29 +80,24 @@ var GenresView = Backbone.View.extend({
 
 var AppRouter = Backbone.Router.extend({
   routes: {
-    "albums": "viewAlbums",
-    "albums/:albumId": "viewAlbumById",
-    "artists": "viewArtists",
-    "genres": "viewGenres",
+    "index": "index",
+    "cars": "viewCars",
+    "trucks": "viewTrucks",
     "*other": "defaultRoute"
   },
 
-  viewAlbums: function(){
-    var view = new AlbumsView({ el: "#container" });
+  index: function(){
+    var view = new HomeView({ el: "#container" });
     view.render();
   },
 
-  viewAlbumById: function(albumId){
-
-  },
-
-  viewArtists: function(){
-    var view = new ArtistsView({ el: "#container" });
+  viewCars: function(){
+    var view = new CarsView({ el: "#container", model: cars });
     view.render();
   },
 
-  viewGenres: function(){
-    var view = new GenresView({ el: "#container" });
+  viewTrucks: function(){
+    var view = new TrucksView({ el: "#container", model: trucks });
     view.render();
   }, 
 
