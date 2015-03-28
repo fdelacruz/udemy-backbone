@@ -84,13 +84,13 @@ var HomeView = Backbone.View.extend({
 
 var AppRouter = Backbone.Router.extend({
   routes: {
-    "index": "index",
+    "home": "home",
     "cars": "viewCars",
     "trucks": "viewTrucks",
     "*other": "defaultRoute"
   },
 
-  index: function(){
+  home: function(){
     var view = new HomeView({ el: "#container" });
     view.render();
   },
