@@ -31,6 +31,8 @@ var CarsView = Backbone.View.extend({
       var carView = new CarView({ model: car });
       self.$el.append(carView.render().$el);
     });
+
+    return this;
   }
 });
 
@@ -67,6 +69,8 @@ var TrucksView = Backbone.View.extend({
       var truckView = new TruckView({ model: truck });
       self.$el.append(truckView.render().$el);
     });
+
+    return this;
   }
 });
 
@@ -92,13 +96,13 @@ var AppRouter = Backbone.Router.extend({
   },
 
   viewCars: function(){
-    var view = new CarsView({ el: "#container", model: cars });
-    view.render();
+    var view = new CarsView({ model: cars });
+    $('#container').html(view.render().$el);
   },
 
   viewTrucks: function(){
-    var view = new TrucksView({ el: "#container", model: trucks });
-    view.render();
+    var view = new TrucksView({ model: trucks });
+    $('#container').html(view.render().$el);
   }, 
 
   defaultRoute: function(){
