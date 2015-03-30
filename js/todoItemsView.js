@@ -8,11 +8,16 @@ var TodoItemsView = Backbone.View.extend({
       throw new Error('model is not specified.');
 
     this.model.on('add', this.onAddTodoItem, this);
+    this.model.on('remove', this.onRemoveItem, this);
   },
 
   onAddTodoItem: function(todoItem) {
     var view = new TodoItemView({ model: todoItem });
     this.$el.append(view.render().$el);
+  },
+
+  onRemoveItem: function(todoItem) {
+    this.$('li#' + todoItem.id).remove();
   },
 
   events: {
