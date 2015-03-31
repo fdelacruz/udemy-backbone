@@ -3,7 +3,7 @@ var TodoItem = Backbone.Model.extend({
     completed: false
   },
 
-  urlRoot: 'https://jsonplaceholder.typicode.com/todos',
+  urlRoot: 'http://jsonplaceholder.typicode.com/todos',
 
   validate: function(attrs) {
     if (!attrs.title)
